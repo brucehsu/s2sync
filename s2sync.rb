@@ -1,8 +1,48 @@
-include Java
-import javax.swing.JFrame
+require 'java'
+require 'rubygems'
 
-class S2sync < JFrame
-  def initialize
-    
-  end
+class S2sync
+
+  include_package 'org.eclipse.swt'
+  include_package 'org.eclipse.swt.layout'
+  include_package 'org.eclipse.swt.widgets'
+
+    def initialize
+      Display.setAppName "Social Status Sync"
+
+      @display = Display.new
+      @main_window = Shell.new @display
+      @main_window.setSize(250, 300)
+
+      layout = GridLayout.new 5, false
+      layout.makeColumnsEqualWidth = true
+
+      @main_window.setLayout layout
+      @main_window.setText "Social Status Sync"
+
+      @status_field = Text.new(@main_window, SWT::MULTI)
+      @status_field.setLayoutData(GridData.new(GridData::FILL, GridData::FILL, true, true, 5, 5))
+
+      @update_button = Button.new(@main_window, SWT::PUSH)
+      @update_button.setText "Update"
+      @update_button.setLayoutData(GridData.new(GridData::FILL, GridData::FILL, true, false, 5, 1))
+
+      @setting_button = Button.new(@main_window, SWT::PUSH)
+      @setting_button.setText "Service Settings"
+      @setting_button.setLayoutData(GridData.new(GridData::FILL,GridData::FILL, true, false, 5, 1))
+
+      @word_count_label = Label.new(@main_window,SWT::RIGHT)
+      @word_count_label.setText "text count"
+      @word_count_label.setLayoutData(GridData.new(GridData::END, GridData::END, false, false, 5, 1))
+
+      @main_window.open
+
+      while (!@main_window.isDisposed) do
+        @display.sleep unless @display.readAndDispatch
+      end
+
+      @display.dispose
+    end
 end
+
+S2sync.new
