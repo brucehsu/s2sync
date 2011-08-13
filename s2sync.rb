@@ -1,5 +1,8 @@
 require 'java'
 require 'rubygems'
+require 'oauth'
+require 'json'
+require 'service_auth'
 require 'settings_window'
 
 class S2sync
