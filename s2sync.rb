@@ -1,10 +1,9 @@
 require 'java'
-require 'open-uri'
-require 'net/https'
 require 'rubygems'
 require 'nokogiri'
 
-require 'service_auth'
+require 'plurk_agent'
+require 'fb_agent'
 require 'settings_window'
 
 class S2sync
@@ -15,7 +14,8 @@ class S2sync
   include_package 'org.eclipse.swt.browser'
 
   def initialize
-    @auth = ServiceAuth.new
+    init_agent
+
     Display.setAppName "Social Status Sync"
 
     @display = Display.new
@@ -40,16 +40,12 @@ class S2sync
     @update_button.setLayoutData(GridData.new(GridData::FILL, GridData::FILL, true, false, 5, 1))
     @update_button.addSelectionListener { |event|
       #for plurk
-      @auth.get_access_token(:plurk).post('http://www.plurk.com/APP/Timeline/plurkAdd', {"content"=>@status_field.getText, "qualifier" => "says"}, nil).body
+      @plurk_agent.post(@status_field.getText)
 
       #for facebook
-      uri = URI.parse("https://graph.facebook.com/brucehsu13/feed")
-      http = Net::HTTP.new(uri.host, uri.port)
-      http.use_ssl = true
-      http.verify_mode = OpenSSL::SSL::VERIFY_NONE
-      data = "access_token=#{CGI::escape @fb_token}&message=#{CGI::escape @status_field.getText}"
-      res = http.post(uri.path,data, {'Content-Type'=> 'application/x-www-form-urlencoded'})
-      puts res.body
+      @fb_agent.post(@status_field.getText)
+
+      @status_field.setText ""
 
     }
 
@@ -71,6 +67,11 @@ class S2sync
     end
 
     @display.dispose
+  end
+
+  def init_agent
+    @plurk_agent = PlurkAgent.new
+    @fb_agent = FBAgent.new
   end
 
 end
