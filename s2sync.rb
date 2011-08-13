@@ -1,48 +1,56 @@
 require 'java'
 require 'rubygems'
+require 'settings_window'
 
 class S2sync
 
   include_package 'org.eclipse.swt'
   include_package 'org.eclipse.swt.layout'
   include_package 'org.eclipse.swt.widgets'
+  include_package 'org.eclipse.swt.events'
 
-    def initialize
-      Display.setAppName "Social Status Sync"
+  include SettingsWindow
 
-      @display = Display.new
-      @main_window = Shell.new @display
-      @main_window.setSize(250, 300)
+  def initialize
+    Display.setAppName "Social Status Sync"
 
-      layout = GridLayout.new 5, false
-      layout.makeColumnsEqualWidth = true
+    @display = Display.new
+    @main_window = Shell.new @display
+    @main_window.setSize(250, 300)
 
-      @main_window.setLayout layout
-      @main_window.setText "Social Status Sync"
+    layout = GridLayout.new 5, false
+    layout.makeColumnsEqualWidth = true
 
-      @status_field = Text.new(@main_window, SWT::MULTI)
-      @status_field.setLayoutData(GridData.new(GridData::FILL, GridData::FILL, true, true, 5, 5))
+    @main_window.setLayout layout
+    @main_window.setText "Social Status Sync"
 
-      @update_button = Button.new(@main_window, SWT::PUSH)
-      @update_button.setText "Update"
-      @update_button.setLayoutData(GridData.new(GridData::FILL, GridData::FILL, true, false, 5, 1))
+    @status_field = Text.new(@main_window, SWT::MULTI)
+    @status_field.setLayoutData(GridData.new(GridData::FILL, GridData::FILL, true, true, 5, 5))
+    @status_field.addModifyListener { |event|
+      @word_count_label.setText(@status_field.getText.split(//u).length.to_s)
+    }
 
-      @setting_button = Button.new(@main_window, SWT::PUSH)
-      @setting_button.setText "Service Settings"
-      @setting_button.setLayoutData(GridData.new(GridData::FILL,GridData::FILL, true, false, 5, 1))
+    @update_button = Button.new(@main_window, SWT::PUSH)
+    @update_button.setText "Update"
+    @update_button.setLayoutData(GridData.new(GridData::FILL, GridData::FILL, true, false, 5, 1))
 
-      @word_count_label = Label.new(@main_window,SWT::RIGHT)
-      @word_count_label.setText "text count"
-      @word_count_label.setLayoutData(GridData.new(GridData::END, GridData::END, false, false, 5, 1))
+    @setting_button = Button.new(@main_window, SWT::PUSH)
+    @setting_button.setText "Service Settings"
+    @setting_button.setLayoutData(GridData.new(GridData::FILL, GridData::FILL, true, false, 5, 1))
 
-      @main_window.open
+    @word_count_label = Label.new(@main_window, SWT::RIGHT)
+    @word_count_label.setText "     0"
+    @word_count_label.setLayoutData(GridData.new(GridData::END, GridData::CENTER, true, false, 5, 1))
 
-      while (!@main_window.isDisposed) do
-        @display.sleep unless @display.readAndDispatch
-      end
+    @main_window.open
 
-      @display.dispose
+    while (!@main_window.isDisposed) do
+      @display.sleep unless @display.readAndDispatch
     end
+
+    @display.dispose
+  end
+
 end
 
 S2sync.new
