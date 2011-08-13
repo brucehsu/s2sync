@@ -1,6 +1,7 @@
 require 'java'
 require 'rubygems'
 require 'nokogiri'
+require 'yaml'
 
 require 'plurk_agent'
 require 'fb_agent'
@@ -15,6 +16,12 @@ class S2sync
 
   def initialize
     init_agent
+
+    #Read stored tokens from a yaml file
+    @config = {}
+    if File.exists? 'config.yaml' then
+      @config = YAML::load(File.open('config.yaml'))
+    end
 
     Display.setAppName "Social Status Sync"
 
@@ -72,6 +79,12 @@ class S2sync
   def init_agent
     @plurk_agent = PlurkAgent.new
     @fb_agent = FBAgent.new
+  end
+
+  def write_config
+    config_file = File.new('config.yaml', 'w+')
+    config_file.write(@config.to_yaml)
+    config_file.close
   end
 
 end

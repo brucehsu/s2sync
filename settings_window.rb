@@ -16,11 +16,23 @@ class S2sync
     @fb_tab.setText "Facebook"
 
     @fb_tab_browser = Browser.new(@service_tab_folder, SWT::V_SCROLL | SWT::H_SCROLL)
-    @fb_tab_browser.setUrl @fb_agent.get_authorize_url
+
+    if @fb_agent.get_user_id(@config['fb']['token']) == nil then
+      @config.delete('fb')
+      @fb_tab_browser.setUrl @fb_agent.get_authorize_url
+    else
+      @fb_agent.get_access_token(@config['fb']['token'])
+      @fb_tab_browser.setText 'Already authorized'
+    end
     @fb_tab_browser.addProgressListener { |event|
-      if event.total == event.current then
-        if (url = @fb_agent.get_access_token(@fb_tab_browser.getUrl, @fb_tab_browser.getText)) != nil then
-          @fb_tab_browser.setUrl url
+      if not @config.has_key? 'fb' then
+        if event.total == event.current then
+          if (hash=(@fb_agent.get_access_token(@fb_tab_browser.getUrl, @fb_tab_browser.getText))).has_key? :url then
+            @fb_tab_browser.setUrl hash[:url]
+          elsif hash.has_key? :token then
+            @config['fb'] = {'token' => hash[:token]}
+            write_config
+          end
         end
       end
     }
@@ -30,13 +42,20 @@ class S2sync
     @plurk_tab.setText "Plurk"
 
     @plurk_tab_browser = Browser.new(@service_tab_folder, SWT::V_SCROLL | SWT::H_SCROLL)
-    @plurk_tab_browser.setUrl(@plurk_agent.get_authorize_url)
+    if @config.has_key? 'plurk' then
+      @plurk_agent.get_access_token(@config['plurk']['token'], @config['plurk']['secret'])
+      @plurk_tab_browser.setText 'Already authorized'
+    else
+      @plurk_tab_browser.setUrl(@plurk_agent.get_authorize_url)
+    end
+
     @plurk_tab_browser.addProgressListener { |event|
       if @plurk_tab_browser.getUrl == 'http://www.plurk.com/OAuth/authorizeDone' then
         if event.total == event.current then
           html = Nokogiri::HTML(@plurk_tab_browser.getText)
-          @plurk_agent.get_access_token(html.xpath("//*/span[@id='oauth_verifier']").first.text)
-          @plurk_tab_browser.setText "<html><body><div width=\"100%\" align=\"center\">#{html.xpath("//*/span[@id='oauth_verifier']").first.text}</div></body></html>"
+          token = @plurk_agent.get_access_token(html.xpath("//*/span[@id='oauth_verifier']").first.text)
+          @config['plurk'] = {'token' => token.token, 'secret' => token.secret}
+          write_config
         end
       end
     }
