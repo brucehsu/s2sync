@@ -21,7 +21,7 @@ class S2sync
     @plurk_tab.setText "Plurk"
     
     @plurk_tab_browser = Browser.new(@service_tab_folder,SWT::V_SCROLL | SWT::H_SCROLL)
-    #@plurk_tab_browser.setUrl ''
+    @plurk_tab_browser.setUrl(@auth.get_authorize_url(:plurk))
     @plurk_tab.setControl(@plurk_tab_browser)
 
     @settings_window.open

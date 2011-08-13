@@ -1,7 +1,5 @@
 require 'java'
 require 'rubygems'
-require 'oauth'
-require 'json'
 require 'service_auth'
 require 'settings_window'
 
@@ -13,6 +11,7 @@ class S2sync
   include_package 'org.eclipse.swt.browser'
 
   def initialize
+    @auth = ServiceAuth.new
     Display.setAppName "Social Status Sync"
 
     @display = Display.new
