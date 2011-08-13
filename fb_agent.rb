@@ -1,5 +1,7 @@
 require 'open-uri'
 require 'net/https'
+require 'rubygems'
+require 'json/pure'
 
 class FBAgent
   def initialize
@@ -21,20 +23,18 @@ class FBAgent
     end
     if html =~ /access_token=(\w|\W)*&expires=(\d)+/ then
       @access_token = html.split(/access_token=/)[1].split(/&expires=/)[0]
-      puts @access_token
       get_user_id
     end
     return nil
   end
 
   def post(content)
-    uri = URI.parse("https://graph.facebook.com/brucehsu13/feed")
+    uri = URI.parse("https://graph.facebook.com/#{@user_id}/feed")
     http = Net::HTTP.new(uri.host, uri.port)
     http.use_ssl = true
     http.verify_mode = OpenSSL::SSL::VERIFY_NONE
     data = "access_token=#{CGI::escape @access_token}&message=#{CGI::escape content}"
     res = http.post(uri.path, data, {'Content-Type'=> 'application/x-www-form-urlencoded'})
-    puts res.body
   end
 
   def get_user_id
@@ -42,6 +42,7 @@ class FBAgent
     http = Net::HTTP.new(uri.host, uri.port)
     http.use_ssl = true
     http.verify_mode = OpenSSL::SSL::VERIFY_NONE
-    http.get("/me?access_token=#{CGI::escape @access_token}",nil).body
+    res = JSON.parse(http.get("/me?access_token=#{CGI::escape @access_token}", nil).body)
+    @user_id = res['id']
   end
 end
