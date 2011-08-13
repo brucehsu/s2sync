@@ -16,7 +16,7 @@ class S2sync
     @fb_tab.setText "Facebook"
 
     @fb_tab_browser = Browser.new(@service_tab_folder,SWT::V_SCROLL | SWT::H_SCROLL)
-    @fb_tab_browser.setUrl ''
+    #@fb_tab_browser.setUrl ''
     @fb_tab.setControl(@fb_tab_browser)
 
     @plurk_tab = TabItem.new @service_tab_folder, SWT::NONE
@@ -28,7 +28,8 @@ class S2sync
       if @plurk_tab_browser.getUrl == 'http://www.plurk.com/OAuth/authorizeDone' then
         if event.total == event.current then
           html = Nokogiri::HTML(@plurk_tab_browser.getText)
-          @user_secret[:plurk] = html.xpath("//*/span[@id='oauth_verifier']").first.text
+          @auth.get_access_token(:plurk,html.xpath("//*/span[@id='oauth_verifier']").first.text)
+          @plurk_tab_browser.setText "<html><body><div width=\"100%\" align=\"center\">#{html.xpath("//*/span[@id='oauth_verifier']").first.text}</div></body></html>"
         end
       end
     }

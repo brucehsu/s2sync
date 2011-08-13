@@ -1,4 +1,5 @@
 require 'java'
+require 'open-uri'
 require 'rubygems'
 require 'nokogiri'
 require 'service_auth'
@@ -35,6 +36,9 @@ class S2sync
     @update_button = Button.new(@main_window, SWT::PUSH)
     @update_button.setText "Update"
     @update_button.setLayoutData(GridData.new(GridData::FILL, GridData::FILL, true, false, 5, 1))
+    @update_button.addSelectionListener { |event|
+      @auth.get_access_token(:plurk).post('http://www.plurk.com/APP/Timeline/plurkAdd', {"content"=>@status_field.getText, "qualifier" => "says"},nil).body
+    }
 
     @setting_button = Button.new(@main_window, SWT::PUSH)
     @setting_button.setText "Service Settings"
