@@ -3,6 +3,8 @@ class S2sync
     @settings_window = Shell.new @display
     @settings_window.setSize(300, 300)
 
+    @user_secret = {}
+
     layout = GridLayout.new 1, false
     layout.makeColumnsEqualWidth = true
     @settings_window.setLayout layout
@@ -14,7 +16,7 @@ class S2sync
     @fb_tab.setText "Facebook"
 
     @fb_tab_browser = Browser.new(@service_tab_folder,SWT::V_SCROLL | SWT::H_SCROLL)
-    #@fb_tab_browser.setUrl ''
+    @fb_tab_browser.setUrl ''
     @fb_tab.setControl(@fb_tab_browser)
 
     @plurk_tab = TabItem.new @service_tab_folder, SWT::NONE
@@ -22,6 +24,14 @@ class S2sync
     
     @plurk_tab_browser = Browser.new(@service_tab_folder,SWT::V_SCROLL | SWT::H_SCROLL)
     @plurk_tab_browser.setUrl(@auth.get_authorize_url(:plurk))
+    @plurk_tab_browser.addProgressListener { |event|
+      if @plurk_tab_browser.getUrl == 'http://www.plurk.com/OAuth/authorizeDone' then
+        if event.total == event.current then
+          html = Nokogiri::HTML(@plurk_tab_browser.getText)
+          @user_secret[:plurk] = html.xpath("//*/span[@id='oauth_verifier']").first.text
+        end
+      end
+    }
     @plurk_tab.setControl(@plurk_tab_browser)
 
     @settings_window.open

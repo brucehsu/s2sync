@@ -1,5 +1,6 @@
 require 'java'
 require 'rubygems'
+require 'nokogiri'
 require 'service_auth'
 require 'settings_window'
 
