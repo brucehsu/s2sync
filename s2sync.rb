@@ -1,7 +1,9 @@
 require 'java'
 require 'open-uri'
+require 'net/https'
 require 'rubygems'
 require 'nokogiri'
+
 require 'service_auth'
 require 'settings_window'
 
@@ -37,7 +39,18 @@ class S2sync
     @update_button.setText "Update"
     @update_button.setLayoutData(GridData.new(GridData::FILL, GridData::FILL, true, false, 5, 1))
     @update_button.addSelectionListener { |event|
-      @auth.get_access_token(:plurk).post('http://www.plurk.com/APP/Timeline/plurkAdd', {"content"=>@status_field.getText, "qualifier" => "says"},nil).body
+      #for plurk
+      @auth.get_access_token(:plurk).post('http://www.plurk.com/APP/Timeline/plurkAdd', {"content"=>@status_field.getText, "qualifier" => "says"}, nil).body
+
+      #for facebook
+      uri = URI.parse("https://graph.facebook.com/brucehsu13/feed")
+      http = Net::HTTP.new(uri.host, uri.port)
+      http.use_ssl = true
+      http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+      data = "access_token=#{CGI::escape @fb_token}&message=#{CGI::escape @status_field.getText}"
+      res = http.post(uri.path,data, {'Content-Type'=> 'application/x-www-form-urlencoded'})
+      puts res.body
+
     }
 
     @setting_button = Button.new(@main_window, SWT::PUSH)
