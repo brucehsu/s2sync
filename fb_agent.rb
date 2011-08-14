@@ -10,7 +10,7 @@ class FBAgent
 
   def get_authorize_url
     return "https://www.facebook.com/dialog/oauth?client_id=#{FB_APP_KEY}&redirect_uri=" +
-        "https://www.facebook.com/connect/login_success.html&scope=publish_stream,read_stream,user_about_me"
+        "https://www.facebook.com/connect/login_success.html&scope=publish_stream,read_stream,user_about_me,offline_access"
   end
 
   def get_access_token(url_or_token, html=nil)
