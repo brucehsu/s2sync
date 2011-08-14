@@ -17,12 +17,11 @@ class S2sync
 
     @fb_tab_browser = Browser.new(@service_tab_folder, SWT::V_SCROLL | SWT::H_SCROLL)
 
-    if @fb_agent.get_user_id(@config['fb']['token']) == nil then
-      @config.delete('fb')
-      @fb_tab_browser.setUrl @fb_agent.get_authorize_url
-    else
+    if (@config.has_key? 'fb') then
       @fb_agent.get_access_token(@config['fb']['token'])
       @fb_tab_browser.setText 'Already authorized'
+    else
+      @fb_tab_browser.setUrl @fb_agent.get_authorize_url
     end
     @fb_tab_browser.addProgressListener { |event|
       if not @config.has_key? 'fb' then

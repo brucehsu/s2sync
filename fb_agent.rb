@@ -21,8 +21,8 @@ class FBAgent
           "https://www.facebook.com/connect/login_success.html" +
           "&client_secret=#{FB_APP_SECRET}&code=#{fb_code}"}
     end
-    if html =~ /access_token=(\w|\W)*&expires=(\d)+/ then
-      @access_token = html.split(/access_token=/)[1].split(/&expires=/)[0]
+    if html =~ /access_token=(\w|\W)*/ then
+      @access_token = html.split(/access_token=/)[1]
       get_user_id
     end
     if html == nil then
