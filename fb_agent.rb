@@ -36,7 +36,16 @@ class FBAgent
     http = Net::HTTP.new(uri.host, uri.port)
     http.use_ssl = true
     http.verify_mode = OpenSSL::SSL::VERIFY_NONE
-    data = "access_token=#{CGI::escape @access_token}&message=#{CGI::escape content}"
+    data = "access_token=#{CGI::escape @access_token}"
+
+    content = parse_url(content)
+    if content.has_key? :url then
+      data += "&link=#{CGI::escape content[:url]}"
+    end
+    if content[:content] != nil then
+      data += "&message=#{CGI::escape content[:content]}"
+    end
+
     res = http.post(uri.path, data, {'Content-Type'=> 'application/x-www-form-urlencoded'})
   end
 
@@ -56,5 +65,15 @@ class FBAgent
     end
 
     @user_id = res['id']
+  end
+
+  def parse_url(content)
+    link_and_content = {}
+    if content.split(/ /)[0] =~ /(http|https):\/\/(\w|\W)+/ then
+      link_and_content[:url] = content.split(/ /)[0]
+      content = content.split(/ /, 2)[1]
+    end
+    link_and_content[:content] = content
+    return link_and_content
   end
 end
