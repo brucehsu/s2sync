@@ -54,6 +54,8 @@ class S2sync
 
       @status_field.setText ""
 
+      #TODO: Service status for both posting and authorizing
+
     }
 
     @setting_button = Button.new(@main_window, SWT::PUSH)

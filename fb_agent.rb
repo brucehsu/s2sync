@@ -22,7 +22,7 @@ class FBAgent
           "&client_secret=#{FB_APP_SECRET}&code=#{fb_code}"}
     end
     if html =~ /access_token=(\w|\W)*/ then
-      @access_token = html.split(/access_token=/)[1].gsub!(/(\<(\w|\W)*\>)/,'')
+      @access_token = html.split(/access_token=/)[1].gsub!(/(\<(\w|\W)*\>)/, '')
       get_user_id
     end
     if html == nil then
@@ -71,10 +71,10 @@ class FBAgent
     link_and_content = {}
     if content.split(/ /)[0] =~ /(http|https):\/\/(\w|\W)+/ then
       link_and_content[:url] = content.split(/ /)[0]
-		if content.match(/(\((\w|\W)+\))/) != nil then
-		  content.gsub!(/(\((\w|\W)+\))/, '')
-		end
-		content = content.split(/ /, 2)[1]
+      if content.match(/(\((\w|\W|\p{L})+\))/u) != nil then
+        content.gsub!(/(\((\w|\W|\p{L})+\))/u, '')
+      end
+      content = content.split(/ /, 2)[1]
     end
     link_and_content[:content] = content
     return link_and_content
