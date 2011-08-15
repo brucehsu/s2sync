@@ -22,7 +22,7 @@ class FBAgent
           "&client_secret=#{FB_APP_SECRET}&code=#{fb_code}"}
     end
     if html =~ /access_token=(\w|\W)*/ then
-      @access_token = html.split(/access_token=/)[1].gsub!(/(\<(\w|\W)*\>)/, '')
+      @access_token = html.split(/access_token=/)[1].gsub(/(\<(\w|\W)*\>)/, '')
       get_user_id
     end
     if html == nil then
