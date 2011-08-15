@@ -71,8 +71,12 @@ class FBAgent
     link_and_content = {}
     if content.split(/ /)[0] =~ /(http|https):\/\/(\w|\W)+/ then
       link_and_content[:url] = content.split(/ /)[0]
-      content = content.split(/ /, 2)[1]
     end
+
+    if content.match(/(\((\w|\W)+\))/) != nil then
+      content.gsub!(/(\((\w|\W)+\))/, '')
+    end
+    content = content.split(/ /, 2)[1]
     link_and_content[:content] = content
     return link_and_content
   end
