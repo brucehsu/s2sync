@@ -15,7 +15,7 @@ class S2sync
     @fb_tab = TabItem.new @service_tab_folder, SWT::NONE
     @fb_tab.setText "Facebook"
 
-    @fb_tab_browser = Browser.new(@service_tab_folder, SWT::V_SCROLL | SWT::H_SCROLL)
+    @fb_tab_browser = Browser.new(@service_tab_folder, SWT::NONE)
 
     if (@config.has_key? 'fb') then
       @fb_agent.get_access_token(@config['fb']['token'])
@@ -40,7 +40,7 @@ class S2sync
     @plurk_tab = TabItem.new @service_tab_folder, SWT::NONE
     @plurk_tab.setText "Plurk"
 
-    @plurk_tab_browser = Browser.new(@service_tab_folder, SWT::V_SCROLL | SWT::H_SCROLL)
+    @plurk_tab_browser = Browser.new(@service_tab_folder, SWT::NONE)
     if @config.has_key? 'plurk' then
       @plurk_agent.get_access_token(@config['plurk']['token'], @config['plurk']['secret'])
       @plurk_tab_browser.setText 'Already authorized'
