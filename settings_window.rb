@@ -60,7 +60,14 @@ class S2sync
     }
     @plurk_tab.setControl(@plurk_tab_browser)
 
-    @settings_window.open
-
+    if not @fb_tab_browser.getText == 'Already authorized' then
+      #@settings_window.open
+    elsif not @plurk_tab_browser.getText == 'Already authorized' then
+      #@service_tab_folder.setSelection @plurk_tab_browser
+      @settings_window.open
+    else
+      return true
+    end
+    return false
   end
 end

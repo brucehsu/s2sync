@@ -62,12 +62,17 @@ class S2sync
     @setting_button.setText "Service Settings"
     @setting_button.setLayoutData(GridData.new(GridData::FILL, GridData::FILL, true, false, 5, 1))
     @setting_button.addSelectionListener { |event|
-      init_setting_window
+      if @settings_window.isDisposed then
+        init_setting_window
+      end
+      @settings_window.open
     }
 
     @word_count_label = Label.new(@main_window, SWT::RIGHT)
     @word_count_label.setText "     0"
     @word_count_label.setLayoutData(GridData.new(GridData::END, GridData::CENTER, true, false, 5, 1))
+
+    init_setting_window
 
     @main_window.open
 
