@@ -46,6 +46,8 @@ class S2sync
     @update_button.setText "Update"
     @update_button.setLayoutData(GridData.new(GridData::FILL, GridData::FILL, true, false, 5, 1))
     @update_button.addSelectionListener { |event|
+	  @status_field.setText(@status_field.getText.strip)
+	  
       #for plurk
       @plurk_agent.post(@status_field.getText)
 

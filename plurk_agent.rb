@@ -35,6 +35,7 @@ class PlurkAgent
   end
 
   def post(content)
+	content = content.strip
     return get_access_token.post('http://www.plurk.com/APP/Timeline/plurkAdd', {"content"=>content, "qualifier" => "says"}, nil)
   end
 end

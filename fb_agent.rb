@@ -32,6 +32,7 @@ class FBAgent
   end
 
   def post(content)
+	content = content.strip
     uri = URI.parse("https://graph.facebook.com/#{@user_id}/feed")
     http = Net::HTTP.new(uri.host, uri.port)
     http.use_ssl = true
@@ -71,10 +72,14 @@ class FBAgent
     link_and_content = {}
     if content.split(/ /)[0] =~ /(http|https):\/\/(\w|\W)+/ then
       link_and_content[:url] = content.split(/ /)[0]
-      if content.match(/(\((\w|\W|\p{L})+\))/u) != nil then
-        content.gsub!(/(\((\w|\W|\p{L})+\))/u, '')
+	  content = content.split(/ /, 2)[1]
+      if content.match(/(\([\w|\W|\p{L}]+\))/u) != nil then
+        if content.split(/(\([\w|\W|\p{L}]+\) +)/u).count > 1  then
+			content = content.split(/(\([\w|\W|\p{L}]+\) +)/u)[2]
+		else
+			content.sub!(/(\([\w|\W|\p{L}]+\))/u,'')
+		end
       end
-      content = content.split(/ /, 2)[1]
     end
     link_and_content[:content] = content
     return link_and_content
