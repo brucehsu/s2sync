@@ -53,7 +53,7 @@ class S2sync
         if event.total == event.current then
           html = Nokogiri::HTML(@plurk_tab_browser.getText)
           token = @plurk_agent.get_access_token(html.xpath("//*/span[@id='oauth_verifier']").first.text)
-          @config['plurk'] = {'token' => token.token, 'secret' => token.secret}
+          @config['plurk'] = {'token' => token[:token], 'secret' => token[:secret]}
           write_config
         end
       end
