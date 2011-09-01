@@ -26,9 +26,9 @@ class FBAgent
 
   def post_content(content)
 	content = content.strip
-    #content = parse_url(content)
-    @facebook.post("#{@user_id}/feed",{'message' => content},
-                   #'link' => CGI::escape('http://www.google.com.tw')},
+    content = parse_url(content)
+    @facebook.post("#{@user_id}/feed",{'message' => content[:content],
+                   'link' => content[:url]},
                    nil)
   end
 
@@ -37,7 +37,7 @@ class FBAgent
   end
 
   def parse_url(content)
-    link_and_content = {:link => ''}
+    link_and_content = {:url => ''}
     if content.split(/ /)[0] =~ /(http|https):\/\/(\w|\W)+/ then
       link_and_content[:url] = content.split(/ /)[0]
 	  content = content.split(/ /, 2)[1]
