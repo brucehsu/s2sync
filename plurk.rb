@@ -4,7 +4,7 @@ require 'rest-core'
 
 Plurk = RestCore::Builder.client(:data) do
   s = self.class
-  use s::DefaultSite, 'https://www.plurk.com/APP'
+  use s::DefaultSite, 'http://www.plurk.com/APP'
 
   use s::Oauth1Header  ,
     'http://www.plurk.com/OAuth/request_token', 
@@ -12,6 +12,15 @@ Plurk = RestCore::Builder.client(:data) do
     'http://www.plurk.com/OAuth/authorize'
 
   use s::CommonLogger  , method(:puts)
+
+  use s::ErrorHandler  , lambda{ |env|
+      if (body = env[s::RESPONSE_BODY]).kind_of?(Hash)
+        raise body['error']
+      else
+        raise body
+      end
+  }
+
   use s::ErrorDetectorHttp
   use s::JsonDecode    , true
 
