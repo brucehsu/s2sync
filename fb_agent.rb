@@ -31,7 +31,7 @@ class FBAgent
     return {:token => @access_token}
   end
 
-  def post(content)
+  def post_content(content)
 	content = content.strip
     uri = URI.parse("https://graph.facebook.com/#{@user_id}/feed")
     http = Net::HTTP.new(uri.host, uri.port)

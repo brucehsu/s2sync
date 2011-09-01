@@ -49,10 +49,10 @@ class S2sync
 	  @status_field.setText(@status_field.getText.strip)
 	  
       #for plurk
-      @plurk_agent.post(@status_field.getText)
+      @plurk_agent.post_content(@status_field.getText)
 
       #for facebook
-      @fb_agent.post(@status_field.getText)
+      @fb_agent.post_content(@status_field.getText)
 
       @status_field.setText ""
 

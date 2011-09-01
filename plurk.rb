@@ -38,6 +38,10 @@ module Plurk::Client
     data['oauth_token_secret'] = secret if data.kind_of?(Hash)
   end
 
+  def add_plurk content, qualifier='says'
+    post('/Timeline/plurkAdd', {"content"=>content, "qualifier" => qualifier}, nil)
+  end
+
  private
   def set_token query
     self.data = query

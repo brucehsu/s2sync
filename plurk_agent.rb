@@ -23,7 +23,7 @@ class PlurkAgent
     return {:token => @plurk.oauth_token, :secret => @plurk.oauth_token_secret}
   end
 
-  def post(content)
-    return @plurk.post('http://www.plurk.com/APP/Timeline/plurkAdd', {"content"=>content, "qualifier" => "says"}, nil)
+  def post_content(content,qualifier='says')
+    return @plurk.add_plurk(content,qualifier)
   end
 end
