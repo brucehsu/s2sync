@@ -26,7 +26,7 @@ class S2sync
     @fb_tab_browser.addProgressListener { |event|
       if not @config.has_key? 'fb' then
         if event.total == event.current then
-          @config['fb'] = @fb_agent.get_access_token(@fb_tab_browser.getUrl, @fb_tab_browser.getText)
+          @config['fb'] = {'token' => @fb_agent.get_access_token(@fb_tab_browser.getUrl, @fb_tab_browser.getText) }
           write_config
         end
       end

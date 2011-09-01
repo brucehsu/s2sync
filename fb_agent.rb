@@ -19,6 +19,8 @@ class FBAgent
       fb_code = url_or_token.split(/https:\/\/www.facebook.com\/connect\/login_success.html\?code=/)[1]
       @facebook.authorize!(:redirect_uri => 'https://www.facebook.com/connect/login_success.html',
                            :code => fb_code)
+    else
+      @facebook.access_token = url_or_token
     end
     get_user_id
     return @facebook.access_token
