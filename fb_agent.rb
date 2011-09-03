@@ -1,5 +1,3 @@
-require 'open-uri'
-require 'net/https'
 require 'rubygems'
 require 'json/pure'
 require 'rest-core/client/rest-graph'
