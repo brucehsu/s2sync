@@ -1,10 +1,10 @@
 require 'rubygems'
 require 'json/pure'
-require 'rest-core/client/rest-graph'
+require 'rest-core/client/facebook'
 
 class FBAgent
   def initialize
-    @facebook = RestGraph.new(:app_id => FB_APP_KEY, :secret => FB_APP_SECRET)
+    @facebook = RestCore::Facebook.new(:app_id => FB_APP_KEY, :secret => FB_APP_SECRET)
   end
 
   def get_authorize_url
