@@ -35,22 +35,7 @@ class S2sync
     @main_window.setLayout layout
     @main_window.setText "Social Status Sync"
 
-    @status_field = Text.new(@main_window, SWT::MULTI | SWT::WRAP)
-    @status_field.setLayoutData(GridData.new(GridData::FILL, GridData::FILL, true, true, 5, 5))
-
-
-    @update_button = Button.new(@main_window, SWT::PUSH)
-    @update_button.setText "Update"
-    @update_button.setLayoutData(GridData.new(GridData::FILL, GridData::FILL, true, false, 5, 1))
-
-    @setting_button = Button.new(@main_window, SWT::PUSH)
-    @setting_button.setText "Service Settings"
-    @setting_button.setLayoutData(GridData.new(GridData::FILL, GridData::FILL, true, false, 5, 1))
-
-    @word_count_label = Label.new(@main_window, SWT::RIGHT)
-    @word_count_label.setText "     0"
-    @word_count_label.setLayoutData(GridData.new(GridData::END, GridData::CENTER, true, false, 5, 1))
-
+    init_widgets(layout)
     init_listener
     init_setting_window
 
@@ -99,6 +84,24 @@ class S2sync
       @settings_window.open
     }
 
+  end
+
+  def init_widgets(layout)
+    @status_field = Text.new(@main_window, SWT::MULTI | SWT::WRAP)
+    @status_field.setLayoutData(GridData.new(GridData::FILL, GridData::FILL, true, true, 5, 5))
+
+
+    @update_button = Button.new(@main_window, SWT::PUSH)
+    @update_button.setText "Update"
+    @update_button.setLayoutData(GridData.new(GridData::FILL, GridData::FILL, true, false, 5, 1))
+
+    @setting_button = Button.new(@main_window, SWT::PUSH)
+    @setting_button.setText "Service Settings"
+    @setting_button.setLayoutData(GridData.new(GridData::FILL, GridData::FILL, true, false, 5, 1))
+
+    @word_count_label = Label.new(@main_window, SWT::RIGHT)
+    @word_count_label.setText "     0"
+    @word_count_label.setLayoutData(GridData.new(GridData::END, GridData::CENTER, true, false, 5, 1))
   end
 
   def write_config
