@@ -57,18 +57,19 @@ class S2sync
 
     #Post content to every SNS
     @update_button.addSelectionListener { |event|
-	  @status_field.setText(@status_field.getText.strip)
+	  content = @status_field.getText.strip
 	  
-      #for plurk
-      @plurk_agent.post_content(@status_field.getText)
+      if not content.length == 0 then
+        #for plurk
+        @plurk_agent.post_content(content)
 
-      #for facebook
-      @fb_agent.post_content(@status_field.getText)
+        #for facebook
+        @fb_agent.post_content(content)
+      end
 
       @status_field.setText ""
 
       #TODO: Service status for both posting and authorizing
-
     }
 
     #Connect setting button to setting window
