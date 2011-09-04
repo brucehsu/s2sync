@@ -16,12 +16,7 @@ class S2sync
 
   def initialize
     init_agent
-
-    #Read stored tokens from a yaml file
-    @config = {}
-    if File.exists? 'config.yaml' then
-      @config = YAML::load(File.open('config.yaml'))
-    end
+    read_config
 
     Display.setAppName "Social Status Sync"
 
@@ -108,6 +103,14 @@ class S2sync
     config_file = File.new('config.yaml', 'w+')
     config_file.write(@config.to_yaml)
     config_file.close
+  end
+
+  def read_config
+    #Read stored tokens from a yaml file
+    @config = {}
+    if File.exists? 'config.yaml' then
+      @config = YAML::load(File.open('config.yaml'))
+    end
   end
 
 end
