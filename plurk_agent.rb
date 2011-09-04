@@ -24,6 +24,10 @@ class PlurkAgent
   end
 
   def post_content(content,qualifier='says')
-    return @plurk.add_plurk(content,qualifier)
+    begin
+      @plurk.add_plurk(content,qualifier)
+    rescue RuntimeError  => err
+      puts err
+    end
   end
 end

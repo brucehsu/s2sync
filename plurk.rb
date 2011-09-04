@@ -13,19 +13,26 @@ Plurk = RestCore::Builder.client(:data) do
 
   use s::CommonLogger  , method(:puts)
 
-  use s::ErrorHandler  , lambda{ |env|
-      if (body = env[s::RESPONSE_BODY]).kind_of?(Hash)
-        raise body['error']
-      else
-        raise body
-      end
+  use s::ErrorHandler , lambda { |env|
+    raise Plurk::Error.call(env)
   }
-
   use s::ErrorDetectorHttp
   use s::JsonDecode    , true
 
   use s::Defaults      , :data     => lambda{{}}
   run s::RestClient
+end
+
+class Plurk::Error < RuntimeError
+  attr_reader :error
+
+  def initialize (error)
+    @error = error
+  end
+
+  def self.call(env)
+    @error = env["RESPONSE_BODY"]["error_text"]
+  end
 end
 
 module Plurk::Client
