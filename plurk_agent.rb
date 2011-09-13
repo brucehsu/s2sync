@@ -33,4 +33,8 @@ class PlurkAgent
       puts err
     end
   end
+
+  def post_comment(content,id=@prev_id,qualifier='says')
+    @plurk.add_response(id,content,qualifier)
+  end
 end

@@ -58,12 +58,16 @@ module Plurk::Client
     post('/Timeline/plurkAdd', {"content"=>content, "qualifier" => qualifier}, nil)
   end
 
+  def add_response plurk_id, content, qualifier='says'
+    post('/Responses/responseAdd', {'plurk_id' => plurk_id,
+           'content' => content, 'qualifier' => qualifier}, nil)
+  end
+
  private
   def set_token query
     self.data = query
   end
 end
-
 
 Plurk.send(:include, RestCore::ClientOauth1)
 Plurk.send(:include, Plurk::Client)
