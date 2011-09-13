@@ -3,6 +3,8 @@ require 'json/pure'
 require 'rest-core/client/facebook'
 
 class FBAgent
+  attr_reader :prev_id
+
   def initialize
     @facebook = RestCore::Facebook.new(:app_id => FB_APP_KEY, :secret => FB_APP_SECRET)
   end
@@ -27,9 +29,10 @@ class FBAgent
   def post_content(content)
 	content = content.strip
     content = parse_url(content)
-    @facebook.post("#{@user_id}/feed",{'message' => content[:content],
+    @prev_id = @facebook.post("#{@user_id}/feed",{'message' => content[:content],
                    'link' => content[:url]},
                    nil)
+    @prev_id = @prev_id['id']
   end
 
   def get_user_id(token = nil)
