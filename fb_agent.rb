@@ -19,8 +19,8 @@ class FBAgent
                            :code => fb_code)
     else
       @facebook.access_token = url_or_token
+      get_user_id
     end
-    get_user_id
     return @facebook.access_token
   end
 
