@@ -35,6 +35,10 @@ class FBAgent
     @prev_id = @prev_id['id']
   end
 
+  def post_comment(content,id=@prev_id)
+    @facebook.post("#{id}/comments",{'message' => content})
+  end
+
   def get_user_id(token = nil)
     @user_id = @facebook.get('me')['id']
   end
