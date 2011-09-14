@@ -3,6 +3,8 @@ require 'oauth_const'
 require 'plurk'
 
 class PlurkAgent
+  attr_reader :prev_id
+
   def initialize
     @plurk = Plurk.new(:consumer_key => PLURK_APP_KEY, :consumer_secret => PLURK_APP_SECRET)
   end
@@ -25,9 +27,14 @@ class PlurkAgent
 
   def post_content(content,qualifier='says')
     begin
-      @plurk.add_plurk(content,qualifier)
+      @prev_id = @plurk.add_plurk(content,qualifier)
+      @prev_id = @prev_id['plurk_id']
     rescue RuntimeError  => err
       puts err
     end
+  end
+
+  def post_comment(content,id=@prev_id,qualifier='says')
+    @plurk.add_response(id,content,qualifier)
   end
 end
