@@ -44,8 +44,9 @@ class S2sync
   end
 
   def init_agent
-    @plurk_agent = PlurkAgent.new
-    @fb_agent = FBAgent.new
+    @agents = {}
+    @agents[:fb] = FBAgent.new
+    @agents[:plurk] = PlurkAgent.new
   end
 
   def init_listener
@@ -60,11 +61,9 @@ class S2sync
 	  content = @status_field.getText.strip
 	  
       if not content.length == 0 then
-        #for plurk
-        @plurk_agent.post_content(content)
-
-        #for facebook
-        @fb_agent.post_content(content)
+        @agents.each { |sns, agent|
+          agent.post_content(content)
+        }
       end
 
       @status_field.setText ""

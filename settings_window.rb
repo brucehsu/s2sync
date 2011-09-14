@@ -18,15 +18,15 @@ class S2sync
     @fb_tab_browser = Browser.new(@service_tab_folder, SWT::NONE)
 
     if (@config.has_key? 'fb') then
-      @fb_agent.get_access_token(@config['fb']['token'])
+      @agents[:fb].get_access_token(@config['fb']['token'])
       @fb_tab_browser.setText 'Already authorized'
     else
-      @fb_tab_browser.setUrl @fb_agent.get_authorize_url
+      @fb_tab_browser.setUrl @agents[:fb].get_authorize_url
     end
     @fb_tab_browser.addProgressListener { |event|
       if not @config.has_key? 'fb' then
         if event.total == event.current then
-          @config['fb'] = {'token' => @fb_agent.get_access_token(@fb_tab_browser.getUrl, @fb_tab_browser.getText) }
+          @config['fb'] = {'token' => @agents[:fb].get_access_token(@fb_tab_browser.getUrl, @fb_tab_browser.getText) }
           write_config
         end
       end
@@ -38,17 +38,17 @@ class S2sync
 
     @plurk_tab_browser = Browser.new(@service_tab_folder, SWT::NONE)
     if @config.has_key? 'plurk' then
-      @plurk_agent.get_access_token(@config['plurk']['token'], @config['plurk']['secret'])
+      @agents[:plurk].get_access_token(@config['plurk']['token'], @config['plurk']['secret'])
       @plurk_tab_browser.setText 'Already authorized'
     else
-      @plurk_tab_browser.setUrl(@plurk_agent.get_authorize_url)
+      @plurk_tab_browser.setUrl(@agents[:plurk].get_authorize_url)
     end
 
     @plurk_tab_browser.addProgressListener { |event|
       if @plurk_tab_browser.getUrl == 'http://www.plurk.com/OAuth/authorizeDone' then
         if event.total == event.current then
           html = Nokogiri::HTML(@plurk_tab_browser.getText)
-          token = @plurk_agent.get_access_token(html.xpath("//*/span[@id='oauth_verifier']").first.text)
+          token = @agents[:plurk].get_access_token(html.xpath("//*/span[@id='oauth_verifier']").first.text)
           @config['plurk'] = {'token' => token[:token], 'secret' => token[:secret]}
           write_config
         end
