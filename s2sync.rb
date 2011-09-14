@@ -61,8 +61,14 @@ class S2sync
 	  content = @status_field.getText.strip
 	  
       if not content.length == 0 then
+        content = content.split(/^\\p$/)
         @agents.each { |sns, agent|
-          agent.post_content(content)
+          agent.post_content(content[0].strip)
+          if content.count > 1 then
+            content.each_index { |index|
+              agent.post_comment(content[index]) unless index == 0
+            }
+          end
         }
       end
 
