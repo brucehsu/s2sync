@@ -63,10 +63,15 @@ class S2sync
       if not content.length == 0 then
         content = content.split(/^\\p$/)
         @agents.each { |sns, agent|
-          agent.post_content(content[0].strip)
+          if @as_comment_check.getSelection then
+            agent.post_comment(content[0].strip)
+          else
+            agent.post_content(content[0].strip)
+          end
+
           if content.count > 1 then
             content.each_index { |index|
-              agent.post_comment(content[index]) unless index == 0
+              agent.post_comment(content[index].strip) unless index == 0
             }
           end
         }
@@ -99,6 +104,10 @@ class S2sync
     @setting_button = Button.new(@main_window, SWT::PUSH)
     @setting_button.setText "Service Settings"
     @setting_button.setLayoutData(GridData.new(GridData::FILL, GridData::FILL, true, false, 5, 1))
+
+    @as_comment_check = Button.new(@main_window, SWT::CHECK)
+    @as_comment_check.setText "Post as comments"
+    @as_comment_check.setLayoutData(GridData.new(GridData::FILL, GridData::FILL, true, false, 5, 1))
 
     @word_count_label = Label.new(@main_window, SWT::RIGHT)
     @word_count_label.setText "     0"
