@@ -27,7 +27,7 @@ class S2sync
       if not @config.has_key? 'fb' then
         if event.total == event.current then
           if @fb_tab_browser.getUrl =~ /https:\/\/www.facebook.com\/connect\/login_success.html/ then
-            @config['fb'] = {'token' => @fb_agent.get_access_token(@fb_tab_browser.getUrl, @fb_tab_browser.getText) }
+            @config['fb'] = {'token' => @agents[:fb].get_access_token(@fb_tab_browser.getUrl, @fb_tab_browser.getText) }
             write_config
           end
         end
