@@ -1,2 +1,6 @@
 oauth_const.rb
 *.yaml
+.DS_Store
+*.swp
+*~
+#*#
