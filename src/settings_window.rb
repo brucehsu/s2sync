@@ -41,8 +41,14 @@ class S2sync
     @plurk_tab_browser = Browser.new(@service_tab_folder, SWT::NONE)
     if @config.has_key? 'plurk' then
       @agents[:plurk].get_access_token(@config['plurk']['token'], @config['plurk']['secret'])
+    else
+      @plurk_tab_browser.setUrl(@agents[:plurk].get_authorize_url)
+    end
+
+    if @agents[:plurk].has_authorized? then
       @plurk_tab_browser.setText 'Already authorized'
     else
+      @agents[:plurk] = PlurkAgent.new
       @plurk_tab_browser.setUrl(@agents[:plurk].get_authorize_url)
     end
 

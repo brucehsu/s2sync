@@ -25,6 +25,15 @@ class PlurkAgent
     return {:token => @plurk.oauth_token, :secret => @plurk.oauth_token_secret}
   end
 
+  def has_authorized?
+    begin
+      res = @plurk.post("/Profile/getOwnProfile",{},nil)
+    rescue
+      return false
+    end
+    return res['error_text'] ? false : true
+  end
+
   def post_content(content,qualifier='says')
     begin
       @prev_id = @plurk.add_plurk(content,qualifier)
